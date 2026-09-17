@@ -46,7 +46,7 @@ public partial class MainViewModel : ObservableObject
         if (SelectedProducto.ProductoID == 0) await _repository.CrearProductoAsync(SelectedProducto); else await _repository.ActualizarProductoAsync(SelectedProducto);
         await Reload(Productos, await _repository.ListarProductosAsync()); NuevoProducto(); StatusMessage = "Producto guardado";
     });
-    [RelayCommand] private async Task EliminarProductoAsync() => await DeleteAsync(SelectedProducto.ProductoID, _repository.EliminarProductoAsync, async () => await Reload(Productos, await _repository.ListarProductosAsync()), "producto");
+    [RelayCommand] private async Task EliminarProductoAsync() => await DeleteAsync(SelectedProducto?.ProductoID ?? 0, _repository.EliminarProductoAsync, async () => await Reload(Productos, await _repository.ListarProductosAsync()), "producto");
 
     [RelayCommand] private void NuevaCategoria() => SelectedCategoria = new();
     [RelayCommand] private async Task GuardarCategoriaAsync() => await RunAsync(async () =>
@@ -55,7 +55,7 @@ public partial class MainViewModel : ObservableObject
         if (SelectedCategoria.CategoriaID == 0) await _repository.CrearCategoriaAsync(SelectedCategoria); else await _repository.ActualizarCategoriaAsync(SelectedCategoria);
         await Reload(Categorias, await _repository.ListarCategoriasAsync()); NuevaCategoria(); StatusMessage = "Categoría guardada";
     });
-    [RelayCommand] private async Task EliminarCategoriaAsync() => await DeleteAsync(SelectedCategoria.CategoriaID, _repository.EliminarCategoriaAsync, async () => await Reload(Categorias, await _repository.ListarCategoriasAsync()), "categoría");
+    [RelayCommand] private async Task EliminarCategoriaAsync() => await DeleteAsync(SelectedCategoria?.CategoriaID ?? 0, _repository.EliminarCategoriaAsync, async () => await Reload(Categorias, await _repository.ListarCategoriasAsync()), "categoría");
 
     [RelayCommand] private void NuevoProveedor() => SelectedProveedor = new();
     [RelayCommand] private async Task GuardarProveedorAsync() => await RunAsync(async () =>
@@ -64,7 +64,7 @@ public partial class MainViewModel : ObservableObject
         if (SelectedProveedor.ProveedorID == 0) await _repository.CrearProveedorAsync(SelectedProveedor); else await _repository.ActualizarProveedorAsync(SelectedProveedor);
         await BuscarProveedoresCoreAsync(); NuevoProveedor(); StatusMessage = "Proveedor guardado";
     });
-    [RelayCommand] private async Task EliminarProveedorAsync() => await DeleteAsync(SelectedProveedor.ProveedorID, _repository.EliminarProveedorAsync, BuscarProveedoresCoreAsync, "proveedor");
+    [RelayCommand] private async Task EliminarProveedorAsync() => await DeleteAsync(SelectedProveedor?.ProveedorID ?? 0, _repository.EliminarProveedorAsync, BuscarProveedoresCoreAsync, "proveedor");
     [RelayCommand] private async Task BuscarProveedoresAsync() => await RunAsync(BuscarProveedoresCoreAsync);
     private async Task BuscarProveedoresCoreAsync() => await Reload(Proveedores, await _repository.ListarProveedoresAsync(FiltroContacto, FiltroCiudad));
 
@@ -75,7 +75,7 @@ public partial class MainViewModel : ObservableObject
         if (SelectedPedido.PedidoID == 0) await _repository.CrearPedidoAsync(SelectedPedido); else await _repository.ActualizarPedidoAsync(SelectedPedido);
         await Reload(Pedidos, await _repository.ListarPedidosAsync()); NuevoPedido(); StatusMessage = "Pedido guardado";
     });
-    [RelayCommand] private async Task EliminarPedidoAsync() => await DeleteAsync(SelectedPedido.PedidoID, _repository.EliminarPedidoAsync, async () => await Reload(Pedidos, await _repository.ListarPedidosAsync()), "pedido");
+    [RelayCommand] private async Task EliminarPedidoAsync() => await DeleteAsync(SelectedPedido?.PedidoID ?? 0, _repository.EliminarPedidoAsync, async () => await Reload(Pedidos, await _repository.ListarPedidosAsync()), "pedido");
 
     [RelayCommand] private async Task GenerarReporteAsync() => await RunAsync(async () =>
     {

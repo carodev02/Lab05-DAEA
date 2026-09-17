@@ -5,9 +5,9 @@ USE NeptunoDB;
 GO
 
 IF OBJECT_ID(N'dbo.Categorias', N'U') IS NULL
-CREATE TABLE dbo.Categorias (CategoriaID INT IDENTITY PRIMARY KEY, NombreCategoria NVARCHAR(30) NOT NULL, Descripcion NVARCHAR(200));
+CREATE TABLE dbo.Categorias (CategoriaID INT IDENTITY PRIMARY KEY, NombreCategoria NVARCHAR(30) NOT NULL, Descripcion NVARCHAR(200), Activo BIT NOT NULL CONSTRAINT DF_Categorias_Activo DEFAULT 1);
 IF OBJECT_ID(N'dbo.Proveedores', N'U') IS NULL
-CREATE TABLE dbo.Proveedores (ProveedorID INT IDENTITY PRIMARY KEY, CompaniaNombre NVARCHAR(60) NOT NULL, NombreContacto NVARCHAR(40), CargoContacto NVARCHAR(40), Direccion NVARCHAR(80), Ciudad NVARCHAR(30), CodigoPostal NVARCHAR(10), Pais NVARCHAR(30), Telefono NVARCHAR(24), Fax NVARCHAR(24));
+CREATE TABLE dbo.Proveedores (ProveedorID INT IDENTITY PRIMARY KEY, CompaniaNombre NVARCHAR(60) NOT NULL, NombreContacto NVARCHAR(40), CargoContacto NVARCHAR(40), Direccion NVARCHAR(80), Ciudad NVARCHAR(30), CodigoPostal NVARCHAR(10), Pais NVARCHAR(30), Telefono NVARCHAR(24), Fax NVARCHAR(24), Activo BIT NOT NULL CONSTRAINT DF_Proveedores_Activo DEFAULT 1);
 IF OBJECT_ID(N'dbo.Clientes', N'U') IS NULL
 CREATE TABLE dbo.Clientes (ClienteID INT IDENTITY PRIMARY KEY, Empresa NVARCHAR(60) NOT NULL, NombreContacto NVARCHAR(40), Ciudad NVARCHAR(30), Pais NVARCHAR(30), Telefono NVARCHAR(24));
 IF OBJECT_ID(N'dbo.Empleados', N'U') IS NULL
@@ -15,9 +15,9 @@ CREATE TABLE dbo.Empleados (EmpleadoID INT IDENTITY PRIMARY KEY, Nombre NVARCHAR
 IF OBJECT_ID(N'dbo.Transportistas', N'U') IS NULL
 CREATE TABLE dbo.Transportistas (TransportistaID INT IDENTITY PRIMARY KEY, CompaniaNombre NVARCHAR(60) NOT NULL, Telefono NVARCHAR(24));
 IF OBJECT_ID(N'dbo.Productos', N'U') IS NULL
-CREATE TABLE dbo.Productos (ProductoID INT IDENTITY PRIMARY KEY, NombreProducto NVARCHAR(60) NOT NULL, ProveedorID INT NULL REFERENCES dbo.Proveedores, CategoriaID INT NULL REFERENCES dbo.Categorias, CantidadPorUnidad NVARCHAR(30), PrecioUnidad DECIMAL(10,2) NOT NULL DEFAULT 0, UnidadesEnExistencia SMALLINT NOT NULL DEFAULT 0, UnidadesEnPedido SMALLINT NOT NULL DEFAULT 0, NivelDeReorden SMALLINT NOT NULL DEFAULT 0, Descontinuado BIT NOT NULL DEFAULT 0);
+CREATE TABLE dbo.Productos (ProductoID INT IDENTITY PRIMARY KEY, NombreProducto NVARCHAR(60) NOT NULL, ProveedorID INT NULL REFERENCES dbo.Proveedores, CategoriaID INT NULL REFERENCES dbo.Categorias, CantidadPorUnidad NVARCHAR(30), PrecioUnidad DECIMAL(10,2) NOT NULL DEFAULT 0, UnidadesEnExistencia SMALLINT NOT NULL DEFAULT 0, UnidadesEnPedido SMALLINT NOT NULL DEFAULT 0, NivelDeReorden SMALLINT NOT NULL DEFAULT 0, Descontinuado BIT NOT NULL DEFAULT 0, Activo BIT NOT NULL CONSTRAINT DF_Productos_Activo DEFAULT 1);
 IF OBJECT_ID(N'dbo.Pedidos', N'U') IS NULL
-CREATE TABLE dbo.Pedidos (PedidoID INT IDENTITY PRIMARY KEY, ClienteID INT NULL REFERENCES dbo.Clientes, EmpleadoID INT NULL REFERENCES dbo.Empleados, FechaPedido DATE NOT NULL, FechaRequerida DATE, FechaEnvio DATE, TransportistaID INT NULL REFERENCES dbo.Transportistas, Destinatario NVARCHAR(60), CiudadDestino NVARCHAR(30), PaisDestino NVARCHAR(30));
+CREATE TABLE dbo.Pedidos (PedidoID INT IDENTITY PRIMARY KEY, ClienteID INT NULL REFERENCES dbo.Clientes, EmpleadoID INT NULL REFERENCES dbo.Empleados, FechaPedido DATE NOT NULL, FechaRequerida DATE, FechaEnvio DATE, TransportistaID INT NULL REFERENCES dbo.Transportistas, Destinatario NVARCHAR(60), CiudadDestino NVARCHAR(30), PaisDestino NVARCHAR(30), Activo BIT NOT NULL CONSTRAINT DF_Pedidos_Activo DEFAULT 1);
 IF OBJECT_ID(N'dbo.DetallePedidos', N'U') IS NULL
 CREATE TABLE dbo.DetallePedidos (PedidoID INT NOT NULL REFERENCES dbo.Pedidos, ProductoID INT NOT NULL REFERENCES dbo.Productos, PrecioUnidad DECIMAL(10,2) NOT NULL, Cantidad SMALLINT NOT NULL DEFAULT 1, Descuento DECIMAL(4,2) NOT NULL DEFAULT 0, CONSTRAINT PK_DetallePedidos PRIMARY KEY(PedidoID, ProductoID));
 GO

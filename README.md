@@ -1,4 +1,4 @@
-# Laboratorio 04 NeptunoDB
+# Laboratorio 05 NeptunoDB
 
 Aplicación WPF con MVVM, ADO.NET y procedimientos almacenados para productos, categorías, proveedores y pedidos. Incluye búsqueda de proveedores y reporte de detalles por fechas.
 
@@ -13,8 +13,8 @@ Aplicación WPF con MVVM, ADO.NET y procedimientos almacenados para productos, c
 
 ## Ejecutar en Windows
 
-1. Instalar Visual Studio 2022 con **Desarrollo de escritorio de .NET** y SQL Server.
-2. Ejecutar `database/01-NeptunoDB.sql` y después `database/02-Procedimientos.sql`.
+1. Instalar Visual Studio con **Desarrollo de escritorio de .NET** y SQL Server LocalDB.
+2. Ejecutar `database/01-NeptunoDB.sql`, `database/03-Lab05-Activo.sql` y después `database/02-Procedimientos.sql`.
 3. La configuración predeterminada usa `SQLEXPRESS`. Para otra instancia:
 
 ```powershell
@@ -59,7 +59,8 @@ No suban contraseñas ni conexiones personales. Usen `NEPTUNO_CONNECTION_STRING`
 
 ## Alcance implementado
 
-- CRUD de productos, categorías, proveedores y pedidos.
+- CRUD de productos, categorías, proveedores y pedidos con `ExecuteNonQuery`.
+- Bajas lógicas mediante el campo `Activo`; ningún botón de eliminar ejecuta `DELETE`.
 - Proveedores filtrados por nombre de contacto y ciudad.
 - Detalles unidos con pedidos y productos, filtrados entre fechas.
 

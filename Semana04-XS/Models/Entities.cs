@@ -5,6 +5,7 @@ public class Categoria
     public int CategoriaID { get; set; }
     public string NombreCategoria { get; set; } = string.Empty;
     public string? Descripcion { get; set; }
+    public bool Activo { get; set; } = true;
 }
 
 public class Proveedor
@@ -19,6 +20,7 @@ public class Proveedor
     public string? Pais { get; set; }
     public string? Telefono { get; set; }
     public string? Fax { get; set; }
+    public bool Activo { get; set; } = true;
 }
 
 public class Producto
@@ -33,6 +35,7 @@ public class Producto
     public short UnidadesEnPedido { get; set; }
     public short NivelDeReorden { get; set; }
     public bool Descontinuado { get; set; }
+    public bool Activo { get; set; } = true;
 }
 
 public class Pedido
@@ -47,6 +50,7 @@ public class Pedido
     public string? Destinatario { get; set; }
     public string? CiudadDestino { get; set; }
     public string? PaisDestino { get; set; }
+    public bool Activo { get; set; } = true;
 }
 
 public class DetallePedidoReporte

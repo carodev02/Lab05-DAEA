@@ -34,8 +34,11 @@ public sealed class NeptunoRepository : INeptunoRepository
         await using var connection = Connection();
         await using var command = new SqlCommand(procedure, connection) { CommandType = CommandType.StoredProcedure };
         parameters(command);
+        var newId = command.Parameters.Add("@NuevoID", SqlDbType.Int);
+        newId.Direction = ParameterDirection.Output;
         await connection.OpenAsync();
-        return Convert.ToInt32(await command.ExecuteScalarAsync());
+        await command.ExecuteNonQueryAsync();
+        return newId.Value == DBNull.Value ? 0 : Convert.ToInt32(newId.Value);
     }
 
     private async Task ExecuteAsync(string procedure, Action<SqlCommand> parameters)
@@ -58,7 +61,7 @@ public sealed class NeptunoRepository : INeptunoRepository
         UnidadesEnExistencia = r.GetInt16(r.GetOrdinal("UnidadesEnExistencia")),
         UnidadesEnPedido = r.GetInt16(r.GetOrdinal("UnidadesEnPedido")),
         NivelDeReorden = r.GetInt16(r.GetOrdinal("NivelDeReorden")),
-        Descontinuado = r.GetBoolean(r.GetOrdinal("Descontinuado"))
+        Descontinuado = r.GetBoolean(r.GetOrdinal("Descontinuado")), Activo = r.GetBoolean(r.GetOrdinal("Activo"))
     });
 
     public Task<int> CrearProductoAsync(Producto x) => InsertAsync("dbo.usp_Producto_Crear", c => ProductoParams(c, x, false));
@@ -82,7 +85,7 @@ public sealed class NeptunoRepository : INeptunoRepository
     {
         CategoriaID = r.GetInt32(r.GetOrdinal("CategoriaID")),
         NombreCategoria = r.GetString(r.GetOrdinal("NombreCategoria")),
-        Descripcion = r.IsDBNull(r.GetOrdinal("Descripcion")) ? null : r.GetString(r.GetOrdinal("Descripcion"))
+        Descripcion = r.IsDBNull(r.GetOrdinal("Descripcion")) ? null : r.GetString(r.GetOrdinal("Descripcion")), Activo = r.GetBoolean(r.GetOrdinal("Activo"))
     });
     public Task<int> CrearCategoriaAsync(Categoria x) => InsertAsync("dbo.usp_Categoria_Crear", c => CategoriaParams(c, x, false));
     public Task ActualizarCategoriaAsync(Categoria x) => ExecuteAsync("dbo.usp_Categoria_Actualizar", c => CategoriaParams(c, x, true));
@@ -102,7 +105,7 @@ public sealed class NeptunoRepository : INeptunoRepository
         }, MapProveedor);
     private static Proveedor MapProveedor(SqlDataReader r) => new()
     {
-        ProveedorID = r.GetInt32(r.GetOrdinal("ProveedorID")), CompaniaNombre = r.GetString(r.GetOrdinal("CompaniaNombre")),
+        ProveedorID = r.GetInt32(r.GetOrdinal("ProveedorID")), CompaniaNombre = r.GetString(r.GetOrdinal("CompaniaNombre")), Activo = r.GetBoolean(r.GetOrdinal("Activo")),
         NombreContacto = Str(r, "NombreContacto"), CargoContacto = Str(r, "CargoContacto"), Direccion = Str(r, "Direccion"),
         Ciudad = Str(r, "Ciudad"), CodigoPostal = Str(r, "CodigoPostal"), Pais = Str(r, "Pais"), Telefono = Str(r, "Telefono"), Fax = Str(r, "Fax")
     };
@@ -123,7 +126,7 @@ public sealed class NeptunoRepository : INeptunoRepository
     {
         PedidoID = r.GetInt32(r.GetOrdinal("PedidoID")), ClienteID = NullableInt(r, "ClienteID"), EmpleadoID = NullableInt(r, "EmpleadoID"),
         FechaPedido = r.GetDateTime(r.GetOrdinal("FechaPedido")), FechaRequerida = NullableDate(r, "FechaRequerida"), FechaEnvio = NullableDate(r, "FechaEnvio"),
-        TransportistaID = NullableInt(r, "TransportistaID"), Destinatario = Str(r, "Destinatario"), CiudadDestino = Str(r, "CiudadDestino"), PaisDestino = Str(r, "PaisDestino")
+        TransportistaID = NullableInt(r, "TransportistaID"), Destinatario = Str(r, "Destinatario"), CiudadDestino = Str(r, "CiudadDestino"), PaisDestino = Str(r, "PaisDestino"), Activo = r.GetBoolean(r.GetOrdinal("Activo"))
     });
     private static int? NullableInt(SqlDataReader r, string n) => r.IsDBNull(r.GetOrdinal(n)) ? null : r.GetInt32(r.GetOrdinal(n));
     private static DateTime? NullableDate(SqlDataReader r, string n) => r.IsDBNull(r.GetOrdinal(n)) ? null : r.GetDateTime(r.GetOrdinal(n));
